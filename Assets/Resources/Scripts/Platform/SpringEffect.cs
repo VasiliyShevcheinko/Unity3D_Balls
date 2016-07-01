@@ -22,13 +22,11 @@ public class SpringEffect : MonoBehaviour {
 			d=yStart-transform.position.y;
 			transform.Translate(0,spead,0);
 			spead+=d/10f;
-			//print("spead= "+spead.ToString()+" d="+d.ToString());
 
 			if(spead>speadLim1)
 				spead=speadLim1;
 			if(spead<-speadLim1)
 				spead=-speadLim1;
-
 
 			if(speadLim1>0)
 			{
@@ -41,9 +39,6 @@ public class SpringEffect : MonoBehaviour {
 			else
 			{
 				speadLim1=0;
-//				spead=0;
-//				Vector3 v=transform.position;
-//				transform.position=new Vector3(v.x,yStart,v.z);
 			}
 
 		}
