@@ -18,7 +18,7 @@ public class CamJoltBihavior : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 
 		if(state==1)//задаём новое положение камеры
 		{
