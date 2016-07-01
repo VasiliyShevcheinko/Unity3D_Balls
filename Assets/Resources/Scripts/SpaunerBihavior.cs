@@ -28,58 +28,65 @@ public class SpaunerBihavior : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-		if(state==1)//пауза перед началом||продолжением
+	void Update () {
+		switch(state)
 		{
-			if(speadUpTimer>30 && !speadUpFlag)//определяем когда увеличить скорость шаров
+			case 1://пауза перед началом||продолжением
 			{
-				speadUpFlag=true;
-				createPause+=3;
-			}
-			else
-			{
-				speadUpTimer+=Time.deltaTime;
-			}
-
-			if(createPause<0)
-			{
-				if(!speadUpFlag)
-					state=2;//создадим шар
-				else
-					state=3;//увеличим скорость
-			}
-			else
-				createPause-=Time.deltaTime;
-		}
-		if(state==2)//генерируем первый||очередной шар
-		{
-			GenerateBall();
-			createPause=createPauseLim;;
-			state=1;
-		}
-		if(state==3)//выводим сообщение об увеличении скорости
-		{
-			textSpeadUp.color=Color.Lerp(speadTextColor1,speadTextColor2,k);
-			k+=0.01f;
-			if(k>1)
-			{
-				state=4;
-			}
-		}
-		if(state==4)//убераем сообщение и увеличиваем скорость
-		{
-			textSpeadUp.color=Color.Lerp(speadTextColor1,speadTextColor2,k);
-			k-=0.01f;
-			if(k<0)
-			{
-				currSpead+=0.005f;
-				if(createPauseLim>0.5f)
+				if(speadUpTimer>30 && !speadUpFlag)//определяем когда увеличить скорость шаров
 				{
-					createPauseLim-=createPauseLim/6f;
+					speadUpFlag=true;
+					createPause+=3;
 				}
-				speadUpFlag=false;
-				speadUpTimer=0;
+				else
+				{
+					speadUpTimer+=Time.deltaTime;
+				}
+	
+				if(createPause<0)
+				{
+					if(!speadUpFlag)
+						state=2;//создадим шар
+					else
+						state=3;//увеличим скорость
+				}
+				else
+					createPause-=Time.deltaTime;
+				break;
+			}
+			case 2://генерируем первый||очередной шар
+			{
+				GenerateBall();
+				createPause=createPauseLim;;
 				state=1;
+				break;
+			}
+			case 3://выводим сообщение об увеличении скорости
+			{
+				textSpeadUp.color=Color.Lerp(speadTextColor1,speadTextColor2,k);
+				k+=0.01f;
+				if(k>1)
+				{
+					state=4;
+				}
+				break;
+			}
+			case 4://убераем сообщение и увеличиваем скорость
+			{
+				textSpeadUp.color=Color.Lerp(speadTextColor1,speadTextColor2,k);
+				k-=0.01f;
+				if(k<0)
+				{
+					currSpead+=0.005f;
+					if(createPauseLim>0.5f)
+					{
+						createPauseLim-=createPauseLim/6f;
+					}
+					speadUpFlag=false;
+					speadUpTimer=0;
+					state=1;
+				}
+				break;
 			}
 		}
 	}
