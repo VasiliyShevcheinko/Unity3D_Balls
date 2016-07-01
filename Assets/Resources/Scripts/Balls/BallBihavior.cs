@@ -21,7 +21,7 @@ public abstract class BallBihavior : MonoBehaviour {
 		rotateZ=Random.Range(-5,5);
 		widthLim=GameBihavior.instance.fieldWidth/2f;
 	}
-	void FixedUpdate () {
+	void Update () {
 		BallUpdate();
 		if(transform.position.y<-1)
 		{
