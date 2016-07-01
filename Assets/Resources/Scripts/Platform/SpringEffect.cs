@@ -16,7 +16,7 @@ public class SpringEffect : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(spead!=0)
 		{
 			d=yStart-transform.position.y;
