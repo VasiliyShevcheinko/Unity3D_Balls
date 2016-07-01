@@ -9,12 +9,7 @@ public class GameBihavior : MonoBehaviour {
 	public float fieldWidth;//ширина игрового поля в котором движется платформа и шары
 	public Text textChemp;//для вывода рекорда
 	public Text textCurr;//для вывода текущих очков
-
 	public GameObject buttonMenu;
-//	public Text textButton;
-//	public Image imageButton;
-//	public Button buttonMenu;
-
 	// Use this for initialization
 	void Awake () {
 		instance=this;
