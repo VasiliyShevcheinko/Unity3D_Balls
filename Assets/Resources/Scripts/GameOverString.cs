@@ -17,7 +17,7 @@ public class GameOverString : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(state==1)//добавляем очередной символ
 		{
 			if(i<cm.Length)
