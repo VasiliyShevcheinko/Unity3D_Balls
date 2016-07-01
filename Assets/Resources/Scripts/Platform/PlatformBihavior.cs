@@ -21,7 +21,7 @@ public class PlatformBihavior : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(keyBoard)
 		{
 			left=Input.GetKey(KeyCode.LeftArrow);
