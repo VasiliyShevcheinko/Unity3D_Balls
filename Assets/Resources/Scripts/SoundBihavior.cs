@@ -10,11 +10,6 @@ public class SoundBihavior : MonoBehaviour {
 		instance=this;
 		source=GetComponent<AudioSource>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public void Play(string name)
 	{
