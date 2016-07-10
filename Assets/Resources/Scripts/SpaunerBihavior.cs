@@ -1,93 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using System.Collections.Generic;
 
 public class SpaunerBihavior : MonoBehaviour {
 	public static SpaunerBihavior instance;
-	public Text textSpeadUp;
-	public GameObject[] prefsBallSimple;
-	public GameObject[] prefsBallSwing;
-	public GameObject[] prefsBallSmart;
-	public GameObject[] prefsBallRandom;
-	float createPause;
+	public GameObject prefsBallSimple;
+	public GameObject prefsBallSwing;
+	public GameObject prefsBallSmart;
+	public GameObject prefsBallRandom;
+	float createPause=3f;
 	float createPauseLim=3f;
-	int state;
 	float currSpead=0.01f;//скорость которую будем устанавливать шарам
-	float speadUpTimer;
-	bool speadUpFlag;
-	Color speadTextColor1;//цвет с нулевой альфой
-	Color speadTextColor2;//a=1
-	float k;//для перехода между цветами
+	float speedUpTimer;
+	bool isWork;
 	// Use this for initialization
 	void Start () {
 		instance=this;
-		speadTextColor1=textSpeadUp.color;
-		Color c=speadTextColor1;
-		speadTextColor2=new Color(c.r,c.g,c.b,1);
-		SpaunerStart(3);
+		ClientScene.RegisterPrefab (prefsBallSimple);
+		ClientScene.RegisterPrefab (prefsBallSwing);
+		ClientScene.RegisterPrefab (prefsBallSmart);
+		ClientScene.RegisterPrefab (prefsBallRandom);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		switch(state)
+		if(isWork)
 		{
-			case 1://пауза перед началом||продолжением
+			if(speedUpTimer>30)//определяем когда увеличить скорость шаров
 			{
-				if(speadUpTimer>30 && !speadUpFlag)//определяем когда увеличить скорость шаров
+				speedUpTimer = 0;
+				createPause+=3;
+				isWork = false;
+				currSpead += 0.005f;
+				GameBihavior.instance.RpcShowSpeedUp();
+				if (createPauseLim > 0.5f)
 				{
-					speadUpFlag=true;
-					createPause+=3;
+					createPauseLim -= createPauseLim / 6f;
 				}
-				else
-				{
-					speadUpTimer+=Time.deltaTime;
-				}
-	
-				if(createPause<0)
-				{
-					if(!speadUpFlag)
-						state=2;//создадим шар
-					else
-						state=3;//увеличим скорость
-				}
-				else
-					createPause-=Time.deltaTime;
-				break;
+				return;
 			}
-			case 2://генерируем первый||очередной шар
+			else
+			{
+				speedUpTimer+=Time.deltaTime;
+			}
+
+			if(createPause<0)
 			{
 				GenerateBall();
-				createPause=createPauseLim;;
-				state=1;
-				break;
+				createPause=createPauseLim;
 			}
-			case 3://выводим сообщение об увеличении скорости
-			{
-				textSpeadUp.color=Color.Lerp(speadTextColor1,speadTextColor2,k);
-				k+=0.01f;
-				if(k>1)
-				{
-					state=4;
-				}
-				break;
-			}
-			case 4://убераем сообщение и увеличиваем скорость
-			{
-				textSpeadUp.color=Color.Lerp(speadTextColor1,speadTextColor2,k);
-				k-=0.01f;
-				if(k<0)
-				{
-					currSpead+=0.005f;
-					if(createPauseLim>0.5f)
-					{
-						createPauseLim-=createPauseLim/6f;
-					}
-					speadUpFlag=false;
-					speadUpTimer=0;
-					state=1;
-				}
-				break;
-			}
+			else
+				createPause-=Time.deltaTime;
 		}
 	}
 	void GenerateBall()
@@ -96,34 +61,33 @@ public class SpaunerBihavior : MonoBehaviour {
 		GameObject pref;
 		if(r<40)//генерируем простой шар
 		{
-			pref=prefsBallSimple[Random.Range(0,prefsBallSimple.Length)];
+			pref=prefsBallSimple;
 		}
 		else if(r<70)//генерируем качающийся шар
 		{
-			pref=prefsBallSwing[Random.Range(0,prefsBallSwing.Length)];
+			pref=prefsBallSwing;
 		}
 		else if(r<90)//генерируем умный шар
 		{
-			pref=prefsBallSmart[Random.Range(0,prefsBallSmart.Length)];
+			pref=prefsBallSmart;
 		}
 		else//генерируем шар с случайной траекторией
 		{
-			pref=prefsBallRandom[Random.Range(0,prefsBallRandom.Length)];
+			pref=prefsBallRandom;
 		}
 		Vector3 pos=new Vector3(Random.Range(-2.5f,2.5f),5,0);
 		GameObject g=Instantiate(pref,pos,Quaternion.identity) as GameObject;
-		g.GetComponent<BallBihavior>().SetSpeed(currSpead);
+		BallBihavior ballBih = g.GetComponent<BallBihavior> ();
+		ballBih.Activate ();
+		ballBih.SetSpeed(currSpead);
+		NetworkServer.Spawn (g);
 	}
-	void SpaunerStart(float p=0)
+	public void SpaunerStart()
 	{
-		if(state==0)
-		{
-			createPause=p;
-			state=1;
-		}
+		isWork = true;
 	}
 	public void Stop()
 	{
-		state=5;
+		isWork = false;
 	}
 }

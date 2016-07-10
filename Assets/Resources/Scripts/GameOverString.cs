@@ -18,34 +18,39 @@ public class GameOverString : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(state==1)//добавляем очередной символ
+		switch (state)
 		{
-			if(i<cm.Length)
-			{
-				s+=cm[i];
-				text.text=s;
-				i++;
-				state=2;
-				pause=0.5f;
-			}
-			else
-			{
-				GameBihavior.instance.VisualMenuBatton();
-				state=3;//вывод окончен
-				string s="laugh"+Random.Range(1,4).ToString();
-				SoundBihavior.instance.Play(s);
-			}
-		}
-		if(state==2)//пауза между выводом символов
-		{
-			if(pause<0)
-			{
-				state=1;
-			}
-			else
-			{
-				pause-=Time.deltaTime;
-			}
+			case 1://добавляем очередной символ
+				{
+					if (i < cm.Length)
+					{
+						s += cm [i];
+						text.text = s;
+						i++;
+						state = 2;
+						pause = 0.5f;
+					}
+					else
+					{
+						GameBihavior.instance.VisualMenuBatton ();
+						state = 3;//вывод окончен
+						string s = "loose" + Random.Range (1, 4).ToString ();
+						SoundBihavior.instance.Play (s);
+					}
+					break;
+				}
+			case 2://пауза между выводом символов
+				{
+					if (pause < 0)
+					{
+						state = 1;
+					}
+					else
+					{
+						pause -= Time.deltaTime;
+					}
+					break;
+				}
 		}
 	}
 

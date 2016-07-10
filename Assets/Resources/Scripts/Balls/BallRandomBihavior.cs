@@ -8,6 +8,10 @@ public class BallRandomBihavior : BallBihavior {
 	float k,dk=0.01f;
 	float dy;//расстояние от текущего y до следующего
 	float pause;
+	public override void SetSpeed (float newSpeed)
+	{
+		dk=newSpeed;
+	}
 	#region implemented abstract members of BallBihavior
 	protected override void BallUpdate ()
 	{
@@ -46,9 +50,4 @@ public class BallRandomBihavior : BallBihavior {
 		}
 	}
 	#endregion
-
-	public override void SetSpeed (float newSpeed)
-	{
-		dk=newSpeed;
-	}
 }

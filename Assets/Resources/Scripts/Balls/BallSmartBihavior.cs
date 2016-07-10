@@ -7,6 +7,7 @@ public class BallSmartBihavior : BallBihavior {
 	float randomOffset;
 	// Use this for initialization
 	void Start () {
+		transform.rotation = Quaternion.Euler (0, 90, 0);
 		widthLim=GameBihavior.instance.fieldWidth/2f;
 		platformT=PlatformBihavior.instance.gameObject.transform;
 		speedX=PlatformBihavior.instance.limitSpead*Random.Range(0.3f,1.5f);

@@ -11,40 +11,45 @@ public class CamJoltBihavior : MonoBehaviour {
 	int state;
 	int countAll,countCurr;//количество встрясок
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		instance=this;
 		vLocStart=transform.localPosition;
 		rRotStart=transform.localRotation.eulerAngles;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
-		if(state==1)//задаём новое положение камеры
+		switch(state)
 		{
-			countCurr++;
-			currDr=startDr/(float)countCurr;
-			float x=Random.Range(-currDr,currDr);
-			float y=Random.Range(-currDr,currDr);
-			float z=Random.Range(-currDr,currDr);
-			vLocCurr=new Vector3(vLocStart.x+x,vLocStart.y+y,vLocStart.z+z);
-			transform.localPosition=vLocCurr;
-			k=0;
-			state=2;
-		}
-		else if(state==2)
-		{
-			if(k<1)
+			case 1://задаём новое положение камеры
 			{
-				transform.localPosition=Vector3.Lerp(vLocCurr,vLocStart,k);
-				k+=dk;
+				countCurr++;
+				currDr=startDr/(float)countCurr;
+				float x=Random.Range(-currDr,currDr);
+				float y=Random.Range(-currDr,currDr);
+				float z=Random.Range(-currDr,currDr);
+				vLocCurr=new Vector3(vLocStart.x+x,vLocStart.y+y,vLocStart.z+z);
+				transform.localPosition=vLocCurr;
+				k=0;
+				state=2;
+				break;
 			}
-			else
+			case 2:
 			{
-				if(countCurr==countAll)
-					state=0;
+				if(k<1)
+				{
+					transform.localPosition=Vector3.Lerp(vLocCurr,vLocStart,k);
+					k+=dk;
+				}
 				else
-					state=1;
+				{
+					if(countCurr==countAll)
+						state=0;
+					else
+						state=1;
+				}
+				break;
 			}
 		}
 	}
